@@ -1,0 +1,7 @@
+angle_build_workspace/
+artifacts/
+.idea/
+.vs/
+.vscode/
+SmileyApp/bin/
+SmileyApp/obj/

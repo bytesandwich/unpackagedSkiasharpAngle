@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>SmileyApp</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Nullable>enable</Nullable>
+
+    <Platforms>x64</Platforms>
+    <Platform>x64</Platform>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
+    <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.WinUI" Version="3.119.0" />
+  </ItemGroup>
+
+  <Target Name="BuildNativeDependencies" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <NativeBuildScript>$(MSBuildThisFileDirectory)..\scripts\build-native.ps1</NativeBuildScript>
+      <AngleLibCheck>$(MSBuildThisFileDirectory)..\artifacts\libEGL.dll</AngleLibCheck>
+    </PropertyGroup>
+
+    <Exec Command="powershell.exe -ExecutionPolicy Bypass -File &quot;$(NativeBuildScript)&quot;" Condition="!Exists('$(AngleLibCheck)')" />
+  </Target>
+
+  <ItemGroup>
+    <Content Include="..\artifacts\libEGL.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\artifacts\libGLESv2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
